@@ -56,12 +56,12 @@ void Allocation_Tableau_Jeu_Snake (t_tableau* Jeu);
 
 void Remplissage_Tableau_Snake (t_tableau* Jeu);
 
-void Affichage_Tableau_Snake (t_tableau Jeu);
+void Affichage_Tableau_Snake (t_tableau Jeu,int x);
 
 
 
 
-int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix);
+int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix,t_score* score);
 
 void Tete_Snake (t_tableau* Jeu,t_snake* Snake);
 
@@ -72,8 +72,6 @@ int Security_Snake (t_snake* Snake,t_tableau* Jeu,int lvl);
 void Key_Snake (t_snake* Snake,char*touche);
 
 void Objectif_Snake (t_tableau* Jeu,t_snake* Snake);
-
-void liberation (t_tableau* Jeu,t_snake* Snake);
 
 #endif
 

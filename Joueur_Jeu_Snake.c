@@ -7,15 +7,19 @@
 #define couleur_texte(coul) printf("\033[%dm",coul)
 #define couleur_fond(coul)	printf("\033[%dm",coul+10)
 
-int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
+int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix,t_score* score)
 {
 	t_point tmp[30] ;
+	t_point objo;
 	
 	int i=0;
 	int win=0;
+	int j = 0;
 	char key_touche;
 	char temp;
 	int lvl = 0;
+	int x = 0;
+	
 	
 	(Snake->taille_snake)=0;
 	
@@ -37,6 +41,8 @@ int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
 	/*Definition du premiere objectif*/
 		
 	Objectif_Snake (Jeu,Snake);
+	
+	objo = Jeu->tirage;
 	
 	(Jeu->tab)[(Jeu->tirage.x)][(Jeu->tirage.y)]=OBJECTIF;
 	
@@ -62,12 +68,11 @@ int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
 		printf("$$      | $$$$$$$  | $$$$$$  |$$ |_/$$/ /$$$$$$  | \n");
 		printf(" $$$$$$  |$$ |  $$ | /    $$ |$$   $$<  $$    $$ | \n");
 		printf("/  |__$$ |$$ |  $$ |/$$$$$$$ |$$$$$$  | $$$$$$$$/  \n");
-		printf("$$    $$/ $$ |  $$ |$$    $$ |$$ | $$  |$$       | \n");
+		printf("$$    $$/ $$ |  $$ |$$    $$ |$$ | $$ | $$       | \n");
 		printf(" $$$$$$/  $$/   $$/  $$$$$$$/ $$/   $$/  $$$$$$$/  \n");
 		printf("\nHugo Henrotte CPI2\n");	
 		couleur_texte(RESET);
-		
-		Affichage_Tableau_Snake (*Jeu);
+		Affichage_Tableau_Snake (*Jeu,x);
 		
 		/*Saisie d'un caractere --> Mouvement de la tete*/
 		
@@ -105,30 +110,33 @@ int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
 		/*Remplissage suivant le niveaux*/
 		
 		Remplissage_Jeu_Snake (Jeu,Snake,lvl);
-	
+		
+		/*Objectif atteind*/
+		
 		if (((Snake->tete_snake.x) == (Jeu->tirage.x)) && ((Snake->tete_snake.y) == (Jeu->tirage.y)))
 		{
 			(Snake->taille_snake)++;
 
 			(Snake->corp_snake) = (t_point*)malloc(((Snake->taille_snake)+2)*sizeof(t_point));
-
+			
+			objo = (Jeu->tirage);
+			
 			/*Nouvel objectif*/
 			
 			do
 			{
-				
 				Objectif_Snake (Jeu,Snake);
 				
 			}while((Jeu->tab)[(Jeu->tirage.x)][(Jeu->tirage.y)]==(CORP_SNAKE));
 			
 			(Jeu->tab)[(Jeu->tirage.x)][(Jeu->tirage.y)]=OBJECTIF;
 			
-			(Snake->corp_snake)[1] = (Snake->corp_snake)[0];
-			
 			if(Snake->taille_snake % 2 == 0)
 			{
 				lvl ++;
 			}
+			
+			j=0;
 		}
 		
 		/*Verification que le Snake ne fait pas d'erreur*/
@@ -143,11 +151,11 @@ int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
 		/*Definition du corp avec son developpement*/
 		
 		for(i=1;i<(Snake->taille_snake)+1;i++)
-		{
+		{	
+			
 			(Snake->corp_snake)[i] = tmp [i-1];
-								
+			
 			(Jeu->tab)[(Snake->corp_snake)[i].x][(Snake->corp_snake)[i].y]=CORP_SNAKE;
-				
 		}
 		
 		/*Verification que le Snake ne fait pas d'erreur*/
@@ -157,7 +165,23 @@ int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
 			win = 1;
 		}
 		
+		/*couleur clignitante*/
+		
+		if(j%2==0)
+		{
+			x++;
+		}
+		
+		/*probleme avec un troue dans le snake du coup permet de le fixer*/
+		
+		if(j<=Snake->taille_snake)
+		{
+			(Jeu->tab)[objo.x][objo.y] = CORP_SNAKE;
+		}
+		
 		(Jeu->tab)[(Snake->tete_snake.x)][(Snake->tete_snake.y)]=SNAKE;
+		
+		j++;
 		
 	}while(win!=1);
 	
@@ -193,9 +217,12 @@ int Joueur_Jeu_Snake (t_tableau* Jeu,t_snake* Snake,int choix)
 	printf("   /$$ | $$                                                                                  \n");
 	printf("  | $$$$$$/                                                                                  \n");
 	printf("  |______/                                                                                   \n");
-	printf("You lose\n\n");
+	printf("Joueur :%s\n",score->name);
 	couleur_texte(RESET);
 	
+	/*libere le tableau du copr de snake*/
+	
+	free(Snake->corp_snake);
 	
 	return Snake->taille_snake;
 }

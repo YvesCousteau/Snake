@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-
+//zeuby
 #include "Header.h"
 #include "couleur_console.h"
 #define couleur_texte(coul) printf("\033[%dm",coul)
@@ -149,7 +149,7 @@ int main (void)
 			
 			/*Le Jeu commence */
 			
-			valeur = Joueur_Jeu_Snake (&Jeu,&Snake,choix);
+			valeur = Joueur_Jeu_Snake (&Jeu,&Snake,choix,score);
 			
 			(score->storage) = valeur;
 			
@@ -181,6 +181,13 @@ int main (void)
 	
 	Affichage_Score_Snake (score);
 	
+	/*libere le tableau de la grille*/
+	
+	for(i=0;i<(Jeu.taille);i++)
+	{
+		free((Jeu.tab)[i]);
+		
+	}
 }
 
 
@@ -208,7 +215,6 @@ t_score* Ajout__Score_Snake (t_score* score,int valeur,int x)
 				
 			}while(name[i]!='\0');
 					
-			printf("\nNickname User : %s\n",(name));
 			couleur_texte(RESET);
 			
 			for(i=0;i<New_Score->taille_name+1;i++)
@@ -371,12 +377,5 @@ void trie (t_score* score)
 	return;
 	
 }
-
-void liberation (t_tableau* Jeu,t_snake* Snake)
-{
-	
-	
-}
-
 
 

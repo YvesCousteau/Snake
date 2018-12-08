@@ -6,7 +6,7 @@
 #define couleur_texte(coul) printf("\033[%dm",coul)
 #define couleur_fond(coul)	printf("\033[%dm",coul+10)
 
-void Affichage_Tableau_Snake (t_tableau Jeu)
+void Affichage_Tableau_Snake (t_tableau Jeu,int x)
 {
 	int i,j;
 	
@@ -43,9 +43,18 @@ void Affichage_Tableau_Snake (t_tableau Jeu)
 			}
 			else if(Jeu.tab[i][j]==OBJECTIF)
 			{
-				couleur_texte(BLEU);
-				printf(" %c",(Jeu.tab)[i][j]); 
-				couleur_texte(RESET);
+				if(x%2==0)
+				{
+					couleur_texte(BLEU);
+					printf(" %c",(Jeu.tab)[i][j]); 
+					couleur_texte(RESET);
+				}
+				if(x%2!=0)
+				{
+					couleur_texte(ROUGE);
+					printf(" %c",(Jeu.tab)[i][j]); 
+					couleur_texte(RESET);
+				}
 			}
 
 		}
